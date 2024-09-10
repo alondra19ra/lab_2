@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using System.Drawing;
 
 public class Player : MonoBehaviour
 {
     Rigidbody2D prota;
     float horizontal;
-    bool saltar;
-    bool unSalto;
-    bool dosSaltos;
+    public bool saltar;
+    public bool unSalto;
+    public bool dosSaltos;
     RaycastHit2D rayito;
     public const int maxVida = 10;
     public Scrollbar scrollbar;
@@ -28,13 +30,11 @@ public class Player : MonoBehaviour
         prota = GetComponent<Rigidbody2D>();
         Renderer = GetComponent<SpriteRenderer>();
     }
-    private void Update()
+    private void Update( )
     {
-        horizontal = Input.GetAxis("Horizontal");
-
         scrollbar.size = vidas / maxVida;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             saltar = true;
         }
@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
             TiempoDelJuego(0);
         }
     }
+
     private void Start()
     {
         TiempoDelJuego(1);
@@ -109,4 +110,17 @@ public class Player : MonoBehaviour
     {
         Time.timeScale = a;
     }
+    public void ReadDireccion(InputAction.CallbackContext Context) 
+    {
+        horizontal = Context.ReadValue<float>();
+    }
+    public void ReadJump(InputAction.CallbackContext Context)
+    {
+        if (Context.performed)
+        {
+            unSalto = true;
+
+        }
+    }
+
 }
